@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SchoolMarket - Tu Marketplace Escolar</title>
+    <title>Pásamelo - Tu Marketplace Escolar</title>
     <!-- Tailwind CSS CDN para un diseño rápido y moderno -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
@@ -14,7 +14,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             <div class="flex-shrink-0 flex items-center">
-                <span class="text-2xl font-bold text-blue-600 tracking-tight">🏫 SchoolMarket</span>
+                <span class="text-2xl font-bold text-blue-600 tracking-tight">🏫 Pásamelo</span>
             </div>
             <div class="flex space-x-4">
                 @if (Route::has('login'))
