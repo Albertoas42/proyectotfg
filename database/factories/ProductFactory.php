@@ -21,10 +21,10 @@ class ProductFactory extends Factory
                     'Teclado Mecánico USB'
                 ]) . ' - ' . fake()->word(),
             'description' => fake()->paragraph(2),
-            'price' => fake()->randomFloat(2, 5, 45), // Precios entre 5€ y 45€
+            'price' => fake()->randomFloat(2, 5, 45),
             'item_condition' => fake()->randomElement(['new', 'good', 'worn']),
-            'status' => 'available', // Todos listos para comprar al principio
-            'image_url' => 'default_product.png', // Imagen temporal por defecto
+            'status' => 'available',
+            'image_url' => 'default_product.png',
             'seller_id' => User::where('role', 'student')->inRandomOrder()->first()->user_id,
             'category_id' => Category::inRandomOrder()->first()->category_id,
         ];

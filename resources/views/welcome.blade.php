@@ -19,7 +19,7 @@
             <div class="flex space-x-4">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 bg-gray-100 px-4 py-2 rounded-lg transition">Entrar al Panel</a>
+                        <a href="{{ url('/productos') }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 bg-gray-100 px-4 py-2 rounded-lg transition">Entrar al Panel</a>
                     @else
                         <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 px-3 py-2 transition">Iniciar Sesión</a>
                         @if (Route::has('register'))
@@ -44,7 +44,7 @@
             </p>
             <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md transition">
+                    <a href="{{ url('/productos') }}" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md transition">
                         Explorar el Catálogo
                     </a>
                 @else

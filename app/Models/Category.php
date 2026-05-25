@@ -14,7 +14,7 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'slug', // Opcional, útil para URLs bonitas
+        'slug',
     ];
 
     /**
