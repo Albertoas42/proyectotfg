@@ -2,31 +2,64 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    // Si en tu migración pusiste $table->id('user_id'), Laravel necesita saber que no se llama 'id'
+    protected $primaryKey = 'user_id';
+
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'role',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Un usuario puede tener muchos productos en venta.
      */
-    protected function casts(): array
+    public function products(): HasMany
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(Product::class, 'seller_id');
+    }
+
+    /**
+     * Un usuario puede haber comprado/reservado muchos productos.
+     */
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Product::class, 'buyer_id');
+    }
+
+    /**
+     * Mensajes enviados por el usuario.
+     */
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    /**
+     * Mensajes recibidos por el usuario.
+     */
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }
