@@ -4,7 +4,7 @@
 
             <div class="flex items-center gap-2 shrink-0">
                 <a href="{{ route('products.index') }}" wire:navigate class="text-2xl font-black text-[#13c1ac] tracking-tight no-underline">
-                    💚 segundaclase
+                    💚 Segundaclase
                 </a>
             </div>
 
@@ -28,8 +28,10 @@
             </div>
 
             <div class="flex items-center gap-4 shrink-0">
-                <a href="#" class="bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold px-4 py-2 rounded-full shadow-xs transition flex items-center gap-1">
-                    <span class="text-base">+</span> <span class="hidden sm:inline">Subir Producto</span>
+                <a href="{{ route('products.create') }}" wire:navigate
+                   class="bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold px-4 py-2 rounded-full shadow-xs transition flex items-center gap-1 no-underline shrink-0">
+                    <span class="text-base">+</span>
+                    <span class="hidden sm:inline">Subir Producto</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" class="inline">

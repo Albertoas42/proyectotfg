@@ -32,4 +32,18 @@ class ProductCatalog extends Component
 
         return view('livewire.product-catalog', compact('products'));
     }
+    public function deleteProduct($productId)
+    {
+        // Verificación de seguridad en backend usando Spatie
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403, 'Acción no autorizada.');
+        }
+
+        $product = \App\Models\Product::find($productId);
+
+        if ($product) {
+            $product->delete();
+            session()->flash('message', 'Producto eliminado por el administrador.');
+        }
+    }
 }

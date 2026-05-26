@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\ProductCatalog;
+use App\Livewire\ProductCreate;
+use App\Livewire\ProductShow;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,8 +13,10 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Cada sección es una ruta real e independiente
     Route::get('/productos', ProductCatalog::class)->name('products.index');
+    Route::get('/productos/subir', ProductCreate::class)->name('products.create');
+    Route::get('/productos/{product}/{edit?}', ProductShow::class)->name('products.show');
+
 
     // Provisionales para que no te dé error hoy (puedes apuntarlas al catálogo de momento)
     Route::get('/mensajes', ProductCatalog::class)->name('messages.index');
