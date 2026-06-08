@@ -7,11 +7,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     @livewireStyles
 </head>
-<body class="bg-[#f4f6fa] font-sans antialiased text-gray-800 pb-20 md:pb-0">
+<body class="bg-[#f4f6fa] font-sans antialiased text-gray-800 pb-20 md:pb-0 min-h-screen flex flex-col">
 
 <livewire:header />
 
-{{ $slot }}
+<div class="flex-1">
+    {{ $slot }}
+</div>
+
+<livewire:footer />
 
 @livewireScripts
 </body>

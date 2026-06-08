@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\ChatInbox;
 use App\Livewire\ProductCatalog;
 use App\Livewire\ProductCreate;
 use App\Livewire\ProductShow;
@@ -18,11 +19,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/productos/{product}/{edit?}', ProductShow::class)->name('products.show');
 
 
+    Route::get('/perfil/{user}', \App\Livewire\UserProfile::class)->name('user.profile');
+
     // Provisionales para que no te dé error hoy (puedes apuntarlas al catálogo de momento)
     Route::get('/mensajes', ProductCatalog::class)->name('messages.index');
     Route::get('/mis-anuncios', ProductCatalog::class)->name('my-products.index');
     Route::get('/favoritos', ProductCatalog::class)->name('favorites.index');
 
+    Route::get('/mensajes', ChatInbox::class)->name('chats.inbox');
 });
 Route::middleware('dashboard')->group(function () {
     Route::get('/dashboard', function () {

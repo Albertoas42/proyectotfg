@@ -22,7 +22,9 @@
 
                         <a href="{{ route('products.show', $product->product_id) }}" wire:navigate class="absolute inset-0 z-10"></a>
 
-                        <span class="text-5xl group-hover:scale-105 transition duration-200">📚</span>
+                        <img src="{{ $product->image_path ?? 'https://placehold.co/600x600?text=Sin+Foto' }}"
+                             alt="{{ $product->title }}"
+                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-200">
 
                         <span class="absolute bottom-2 left-2 bg-black/50 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-xs z-20">
                 {{ $product->category->category_name }}
@@ -81,7 +83,7 @@
         <a href="{{ route('products.index') }}" wire:navigate class="flex flex-col items-center gap-0.5 no-underline {{ request()->routeIs('products.index') ? 'text-[#13c1ac]' : 'text-gray-400' }}">
             <span class="text-xl">🌐</span><span class="text-[10px] font-semibold">Catálogo</span>
         </a>
-        <a href="{{ route('messages.index') }}" wire:navigate class="flex flex-col items-center gap-0.5 no-underline {{ request()->routeIs('messages.index') ? 'text-[#13c1ac]' : 'text-gray-400' }}">
+        <a href="{{ route('chats.inbox') }}" wire:navigate class="flex flex-col items-center gap-0.5 no-underline {{ request()->routeIs('chats.inbox') ? 'text-[#13c1ac]' : 'text-gray-400' }}">
             <span class="text-xl">💬</span><span class="text-[10px] font-semibold">Mensajes</span>
         </a>
         <a href="{{ route('my-products.index') }}" wire:navigate class="flex flex-col items-center gap-0.5 no-underline {{ request()->routeIs('my-products.index') ? 'text-[#13c1ac]' : 'text-gray-400' }}">

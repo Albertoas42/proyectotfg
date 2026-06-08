@@ -24,7 +24,7 @@ class ProductFactory extends Factory
             'price' => fake()->randomFloat(2, 5, 45),
             'item_condition' => fake()->randomElement(['new', 'good', 'worn']),
             'status' => 'available',
-            'image_url' => 'default_product.png',
+            'image_url' => 'https://source.unsplash.com/featured/600x600/?{$randomKeyword}',
             'seller_id' => User::where('role', 'student')->inRandomOrder()->first()->user_id,
             'category_id' => Category::inRandomOrder()->first()->category_id,
         ];

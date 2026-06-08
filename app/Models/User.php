@@ -63,4 +63,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'user_id')->withDefault([
+            'bio' => 'Este usuario aún no ha escrito una biografía.',
+            'course' => 'Alumno del centro',
+            'is_verified' => false
+        ]);
+    }
+
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'reviewee_id', 'user_id');
+    }
+
+    public function reviewsWritten()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id', 'user_id');
+    }
+
+    public function averageRating()
+    {
+        return $this->reviewsReceived()->avg('rating') ?? 0;
+    }
 }

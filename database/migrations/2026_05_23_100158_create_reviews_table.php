@@ -10,16 +10,13 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id('review_id');
-            $table->unsignedBigInteger('product_id')->unique(); // Only one review per transaction
-            $table->unsignedBigInteger('reviewer_id');
-            $table->unsignedBigInteger('reviewee_id');
-            $table->integer('rating'); // Validated on backend between 1 and 5
+
+            $table->foreignId('product_id')->constrained('products', 'product_id')->onDelete('cascade');
+            $table->foreignId('reviewer_id')->constrained('users', 'user_id')->onDelete('cascade');
+
+            $table->foreignId('reviewee_id')->constrained('users', 'user_id')->onDelete('cascade');
+            $table->integer('rating');
             $table->text('comment')->nullable();
-
-            $table->foreign('product_id')->references('product_id')->on('products')->onDelete('cascade');
-            $table->foreign('reviewer_id')->references('user_id')->on('users')->onDelete('cascade');
-            $table->foreign('reviewee_id')->references('user_id')->on('users')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
