@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Review;
+use App\Models\Chat;
+use App\Models\Message;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -47,46 +49,94 @@ class DatabaseSeeder extends Seeder
         Profile::factory()->create(['user_id' => $adminUser->user_id, 'course' => 'Profesor / Administrador']);
 
         // 5. Crear tu cuenta de Alumno a mano (Y tu perfil)
-        $normalUser = User::create([
+        $albertoUser = User::create([
             'first_name' => 'Alberto',
             'last_name' => 'Alumno',
             'email' => 'alberto@instituto.com',
             'password' => Hash::make('12345678'),
         ]);
-        $normalUser->assignRole($userRole);
-        Profile::factory()->create(['user_id' => $normalUser->user_id, 'course' => '2º DAW']);
+        $albertoUser->assignRole($userRole);
+        Profile::factory()->create(['user_id' => $albertoUser->user_id, 'course' => '2º DAW']);
 
         // 6. Crear 10 Alumnos falsos con sus respectivos Perfiles
         $fakeUsers = User::factory(10)->create()->each(function ($user) use ($userRole) {
             $user->assignRole($userRole);
-            // Creamos el perfil asociado a este usuario concreto
             Profile::factory()->create(['user_id' => $user->user_id]);
         });
 
-        // 7. Crear 20 Productos asignados aleatoriamente a los alumnos creados
-        // Recogemos todos los usuarios menos al admin para que vendan cosas
+        // Colección de todos los alumnos normales (tú + los falsos) para asignar ventas y compras
         $sellers = User::whereHas('roles', function($q){ $q->where('name', 'user'); })->get();
 
-        $products = Product::factory(20)->create()->each(function ($product) use ($sellers) {
-            // Le asignamos un vendedor aleatorio de nuestra lista
-            $product->update([
-                'seller_id' => $sellers->random()->user_id
-            ]);
-        });
+        // 7. Crear 20 Productos asignados directamente a vendedores aleatorios
+        $products = Product::factory(20)->create([
+            'seller_id' => fn() => $sellers->random()->user_id
+        ]);
 
         // 8. Crear Valoraciones Artificiales (Reviews)
-        // Vamos a simular que se han hecho 10 valoraciones cruzadas sobre los productos existentes
         for ($i = 0; $i < 10; $i++) {
             $product = $products->random();
             $vendedor = $product->seller_id;
-
-            // Buscamos un comprador aleatorio que NO sea el propio vendedor del producto
             $comprador = $sellers->where('user_id', '!=', $vendedor)->random()->user_id;
 
             Review::factory()->create([
                 'product_id' => $product->product_id,
-                'reviewer_id' => $comprador,  // El que vota (comprador)
-                'reviewee_id' => $vendedor,   // El votado (vendedor)
+                'reviewer_id' => $comprador,
+                'reviewee_id' => $vendedor,
+            ]);
+        }
+
+        // =========================================================================
+        // 9. 🚨 NUEVO: GENERACIÓN DE CHATS Y MENSAJES DE PRUEBA (MÁXIMA COMPATIBILIDAD)
+        // =========================================================================
+
+        // Chat 1: Un alumno falso te escribe a TI (Alberto) por un producto tuyo
+        $productoDeAlberto = Product::factory()->create([
+            'title' => 'Libro de PHP y Laravel de 2º DAW',
+            'seller_id' => $albertoUser->user_id,
+            'category_id' => Category::first()->category_id,
+            'price' => 15.00,
+            'item_condition' => 'good'
+        ]);
+
+        $compradorFalso = $fakeUsers->random();
+
+        $chat1 = Chat::create([
+            'product_id' => $productoDeAlberto->product_id,
+            'buyer_id'   => $compradorFalso->user_id,
+            'seller_id'  => $albertoUser->user_id,
+        ]);
+
+        Message::create([
+            'chat_id'   => $chat1->id,
+            'sender_id' => $compradorFalso->user_id,
+            'content'   => '¡Hola Alberto! ¿El libro de PHP tiene las páginas pintadas o está limpio?',
+        ]);
+
+        Message::create([
+            'chat_id'   => $chat1->id,
+            'sender_id' => $albertoUser->user_id,
+            'content'   => 'Buenas. Qué va, está impecable, solo tiene subrayadas a lápiz un par de cosas del tema de bases de datos.',
+        ]);
+
+        // Chat 2: TU (Alberto) le escribes a otro alumno por un producto suyo
+        $productoDeOtro = $products->where('seller_id', '!=', $albertoUser->user_id)->random();
+
+        // Evitamos duplicados por si la combinación aleatoria ya existiera
+        $chat2Exists = Chat::where('product_id', $productoDeOtro->product_id)
+            ->where('buyer_id', $albertoUser->user_id)
+            ->exists();
+
+        if (!$chat2Exists) {
+            $chat2 = Chat::create([
+                'product_id' => $productoDeOtro->product_id,
+                'buyer_id'   => $albertoUser->user_id,
+                'seller_id'  => $productoDeOtro->seller_id,
+            ]);
+
+            Message::create([
+                'chat_id'   => $chat2->id,
+                'sender_id' => $albertoUser->user_id,
+                'content'   => 'Hola, me interesa este artículo que has subido. ¿Me lo dejas un poco más barato si te lo recojo mañana?',
             ]);
         }
     }

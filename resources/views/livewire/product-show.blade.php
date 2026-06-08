@@ -91,10 +91,22 @@
                             <p class="text-[11px] text-gray-400">Vendedor/a del instituto</p>
                         </div>
                     </div>
+
                     @if($product->seller_id == Auth::user()->user_id)
-                        <div class="text-center text-xs font-semibold text-gray-400 py-2 bg-gray-200/50 rounded-xl">Este anuncio es tuyo</div>
+                        <div class="text-center text-xs font-semibold text-gray-400 py-2 bg-gray-200/50 rounded-xl">
+                            Este anuncio es tuyo
+                        </div>
                     @else
-                        <a href="#" class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition text-center block no-underline">💬 Chatear / Reservar</a>
+                        <button wire:click="startChat"
+                                class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition text-center border-none cursor-pointer flex items-center justify-center gap-2">
+                            💬 Chatear / Reservar
+                        </button>
+                    @endif
+
+                    @if (session()->has('error'))
+                        <div class="mt-2 text-xs font-semibold text-red-500 bg-red-50 p-2.5 rounded-lg border border-red-100 text-center">
+                            {{ session('error') }}
+                        </div>
                     @endif
                 </div>
             @endif

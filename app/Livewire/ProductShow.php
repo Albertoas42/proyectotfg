@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Product;
+use App\Models\Chat; // 🚨 NUEVO: Importamos el modelo Chat para poder gestionarlo
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -30,6 +31,39 @@ class ProductShow extends Component
         if ($edit === 'editar') {
             $this->isEditing = true;
         }
+    }
+
+    /**
+     * 🚨 NUEVO: Inicia o recupera una conversación con el vendedor del producto
+     */
+    public function startChat()
+    {
+        $authId = Auth::id();
+        $sellerId = $this->product->seller_id;
+        $productId = $this->product->product_id; // Tu clave primaria personalizada
+
+        // 1. Control de seguridad básico: No puedes chatear contigo mismo
+        if ($authId === $sellerId) {
+            session()->flash('error', 'No puedes abrir un chat en tu propio anuncio.');
+            return;
+        }
+
+        // 2. Buscar si ya existe una conversación de este comprador por este producto concreto
+        $chat = Chat::where('product_id', $productId)
+            ->where('buyer_id', $authId)
+            ->first();
+
+        // 3. Si es la primera vez que se contacta, creamos el chat en caliente
+        if (!$chat) {
+            $chat = Chat::create([
+                'product_id' => $productId,
+                'buyer_id'   => $authId,
+                'seller_id'  => $sellerId,
+            ]);
+        }
+
+        // 4. Redirigir al alumno a la bandeja de entrada pasándole el ID del chat por la URL
+        return $this->redirect(route('chats.inbox', ['chatId' => $chat->id]), navigate: true);
     }
 
     /**

@@ -13,8 +13,8 @@
                    class="px-4 py-2 rounded-full transition {{ request()->routeIs('products.index') ? 'text-[#13c1ac] bg-[#13c1ac]/10 font-bold' : 'hover:bg-gray-100 text-gray-600' }}">
                     🌐 Catálogo
                 </a>
-                <a href="{{ route('messages.index') }}" wire:navigate
-                   class="px-4 py-2 rounded-full transition flex items-center gap-1 {{ request()->routeIs('messages.index') ? 'text-[#13c1ac] bg-[#13c1ac]/10 font-bold' : 'hover:bg-gray-100 text-gray-600' }}">
+                <a href="{{ route('chats.inbox') }}" wire:navigate
+                   class="px-4 py-2 rounded-full transition flex items-center gap-1 {{ request()->routeIs('chats.inbox') ? 'text-[#13c1ac] bg-[#13c1ac]/10 font-bold' : 'hover:bg-gray-100 text-gray-600' }}">
                     💬 Mensajes <span class="bg-red-500 text-white text-[10px] px-1.5 py-0.2 rounded-full">2</span>
                 </a>
                 <a href="{{ route('my-products.index') }}" wire:navigate

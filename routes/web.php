@@ -26,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mis-anuncios', ProductCatalog::class)->name('my-products.index');
     Route::get('/favoritos', ProductCatalog::class)->name('favorites.index');
 
-    Route::get('/mensajes', ChatInbox::class)->name('chats.inbox');
+    Route::get('/mensajes/{chatId?}', ChatInbox::class)->name('chats.inbox');
 });
 Route::middleware('dashboard')->group(function () {
     Route::get('/dashboard', function () {
