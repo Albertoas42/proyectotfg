@@ -86,4 +86,8 @@ class User extends Authenticatable
     {
         return $this->reviewsReceived()->avg('rating') ?? 0;
     }
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'favorites', 'user_id', 'product_id')->withTimestamps();
+    }
 }

@@ -46,4 +46,13 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function isFavoritedBy($user)
+    {
+        if (!$user) return false;
+        return \DB::table('favorites')
+            ->where('user_id', $user->user_id) // cambia a id si tu PK es id
+            ->where('product_id', $this->product_id)
+            ->exists();
+    }
 }

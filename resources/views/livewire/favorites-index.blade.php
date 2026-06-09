@@ -1,18 +1,24 @@
 <main class="max-w-6xl mx-auto px-4 py-6">
-
-    <div class="mb-6 max-w-xl mx-auto">
-        <div class="flex items-center relative">
-            <input type="text" wire:model.live="search" placeholder="¿Qué buscas hoy? Libros, apuntes, calculadoras..."
-                   class="w-full bg-white text-sm pl-4 pr-12 py-3 rounded-full border border-gray-200 shadow-xs focus:outline-none focus:border-[#13c1ac] transition">
-            <button class="absolute right-4 text-gray-400 bg-transparent border-none">🔍</button>
-        </div>
+    <div class="mb-6">
+        <h1 class="text-2xl font-black text-gray-800 tracking-tight">Mis Productos Favoritos</h1>
+        <p class="text-xs text-gray-400">Anuncios que te interesan y tienes guardados</p>
     </div>
 
     @if($products->isEmpty())
-        <div class="text-center py-16 bg-white rounded-xl border border-gray-200 shadow-xs">
-            <span class="text-5xl">🧐</span>
-            <p class="mt-4 text-gray-500 font-medium">No hemos encontrado nada que coincida.</p>
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-xs p-12 text-center max-w-xl mx-auto my-8">
+            <div class="w-20 h-20 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                ⭐
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">No tienes favoritos guardados</h3>
+            <p class="text-sm text-gray-500 mb-8 leading-relaxed">
+                Explora el catálogo del instituto y pulsa sobre el corazón de cualquier artículo para tenerlo controlado en esta pestaña.
+            </p>
+            <a href="{{ route('products.index') }}" wire:navigate
+               class="inline-flex items-center gap-2 bg-[#13c1ac] hover:bg-[#0fa895] text-white px-6 py-3 rounded-xl font-bold transition no-underline shadow-xs">
+                🌐 Ver catálogo
+            </a>
         </div>
+
     @else
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @foreach($products as $product)
@@ -30,41 +36,16 @@
                             {{ $product->category->category_name }}
                         </span>
 
-                        @unless(Auth::user()->hasRole('admin'))
-                            @php
-                                $isFavorite = $product->isFavoritedBy(Auth::user());
-                            @endphp
-                            <button wire:click.stop="toggleFavorite({{ $product->product_id }})"
-                                    class="absolute top-2 right-2 bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition border-none cursor-pointer z-20 flex items-center justify-center transform active:scale-95 group/heart">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     class="h-4 w-4 transition-colors duration-200 {{ $isFavorite ? 'text-red-500 fill-current' : 'text-gray-400 group-hover/heart:text-red-400' }}"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor"
-                                     stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                            </button>
-                        @endunless
-
-                        @hasrole('admin')
-                        <div class="absolute top-2 right-2 flex gap-1.5 z-30" onclick="event.stopPropagation();">
-
-                            <a href="{{ route('products.show', [$product->product_id, 'editar']) }}" wire:navigate
-                               class="bg-amber-500 hover:bg-amber-600 text-white p-1.5 rounded-lg shadow-md transition no-underline text-xs flex items-center justify-center w-7 h-7"
-                               title="Editar Anuncio">
-                                ✏️
-                            </a>
-
-                            <button type="button"
-                                    wire:click.stop="deleteProduct('{{ $product->product_id }} stream')"
-                                    wire:confirm="¿Seguro que quieres borrar este producto como administrador?"
-                                    class="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-lg shadow-md transition border-none cursor-pointer text-xs flex items-center justify-center w-7 h-7"
-                                    title="Eliminar">
-                                🗑️
-                            </button>
-
-                        </div>
-                        @endhasrole
+                        <button wire:click.stop="toggleFavorite({{ $product->product_id }})"
+                                class="absolute top-2 right-2 bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition border-none cursor-pointer z-20 flex items-center justify-center transform active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-4 w-4 text-red-500 fill-current"
+                                 viewBox="0 0 24 24"
+                                 stroke="currentColor"
+                                 stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
                     </div>
 
                     <div class="p-3 flex flex-col flex-1 justify-between relative">
@@ -103,5 +84,4 @@
             <span class="text-xl">⭐</span><span class="text-[10px] font-semibold">Favoritos</span>
         </a>
     </div>
-
 </main>

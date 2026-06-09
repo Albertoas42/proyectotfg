@@ -21,12 +21,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/perfil/{user}', \App\Livewire\UserProfile::class)->name('user.profile');
 
-    // Provisionales para que no te dé error hoy (puedes apuntarlas al catálogo de momento)
-    Route::get('/mensajes', ProductCatalog::class)->name('messages.index');
-    Route::get('/mis-anuncios', ProductCatalog::class)->name('my-products.index');
-    Route::get('/favoritos', ProductCatalog::class)->name('favorites.index');
-
     Route::get('/mensajes/{chatId?}', ChatInbox::class)->name('chats.inbox');
+    Route::get('/mis-anuncios', ProductCatalog::class)->name('my-products.index');
+    Route::get('/favoritos', App\Livewire\FavoritesIndex::class)->name('favorites.index');
+
+
 });
 Route::middleware('dashboard')->group(function () {
     Route::get('/dashboard', function () {
