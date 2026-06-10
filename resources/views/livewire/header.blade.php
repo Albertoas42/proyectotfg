@@ -42,6 +42,16 @@
                     <span class="hidden sm:inline">Subir Producto</span>
                 </a>
 
+                @auth
+                    <a href="{{ route('user.profile', Auth::id()) }}" wire:navigate
+                       class="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 rounded-full transition no-underline text-gray-700">
+                        <div class="w-7 h-7 bg-[#13c1ac]/10 text-[#13c1ac] text-xs font-black rounded-full flex items-center justify-center uppercase">
+                            {{ substr(Auth::user()->first_name ?? 'U', 0, 1) }}
+                        </div>
+                        <span class="text-sm font-semibold hidden sm:inline">{{ Auth::user()->first_name }}</span>
+                    </a>
+                @endauth
+
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
                     <button type="submit" class="text-gray-400 hover:text-red-500 text-sm font-medium cursor-pointer bg-transparent border-none">

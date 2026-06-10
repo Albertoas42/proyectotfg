@@ -82,15 +82,22 @@
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 bg-[#13c1ac]/20 text-[#13c1ac] font-bold rounded-full flex items-center justify-center text-sm">
+
+                    <a href="{{ route('user.profile', $product->seller_id) }}" wire:navigate
+                       class="flex items-center gap-3 mb-4 no-underline group block">
+
+                        <div class="w-10 h-10 bg-[#13c1ac]/20 text-[#13c1ac] font-bold rounded-full flex items-center justify-center text-sm transition group-hover:bg-[#13c1ac]/30">
                             {{ substr($product->seller->first_name, 0, 1) }}
                         </div>
+
                         <div>
-                            <h4 class="text-sm font-bold text-gray-800">{{ $product->seller->first_name }} {{ $product->seller->last_name }}</h4>
-                            <p class="text-[11px] text-gray-400">Vendedor/a del instituto</p>
+                            <h4 class="text-sm font-bold text-gray-800 group-hover:text-[#13c1ac] transition flex items-center gap-1">
+                                {{ $product->seller->first_name }} {{ $product->seller->last_name }}
+                                @if($product->seller->profile?->is_verified) <span class="text-xs">✅</span> @endif
+                            </h4>
+                            <p class="text-[11px] text-gray-400">Ver perfil de la comunidad ➜</p>
                         </div>
-                    </div>
+                    </a>
 
                     @if($product->seller_id == Auth::user()->user_id)
                         <div class="text-center text-xs font-semibold text-gray-400 py-2 bg-gray-200/50 rounded-xl">

@@ -1,78 +1,140 @@
-<main class="max-w-5xl mx-auto px-4 py-8">
+<main class="max-w-6xl mx-auto px-4 py-6">
 
-    <div class="bg-white rounded-3xl border border-gray-200 shadow-xs p-6 md:p-10 mb-8">
-        <div class="flex flex-col md:flex-row items-center gap-6">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-xs p-6 md:p-8 mb-8">
+        <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
 
-            <div class="relative">
-                <div class="w-32 h-32 bg-[#13c1ac]/10 text-[#13c1ac] rounded-full flex items-center justify-center text-4xl font-black border-4 border-white shadow-md">
-                    {{ substr($user->first_name, 0, 1) }}
+            <div class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-4">
+                <div class="w-20 h-20 bg-[#13c1ac]/10 text-[#13c1ac] font-black rounded-full flex items-center justify-center text-3xl uppercase shrink-0">
+                    {{ substr($user->first_name ?? 'U', 0, 1) }}
                 </div>
-                @if($user->profile && $user->profile->is_verified)
-                    <div class="absolute bottom-1 right-1 bg-blue-500 text-white p-1.5 rounded-full border-4 border-white" title="Cuenta Verificada">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293l-4 4a1 1 0 01-1.414 0l-2-2a1 1 0 111.414-1.414L9 10.586l3.293-3.293a1 1 0 111.414 1.414z"></path></svg>
+
+                <div>
+                    <div class="flex items-center justify-center sm:justify-start gap-2 mb-1">
+                        <h1 class="text-2xl font-black text-gray-800 tracking-tight">{{ $user->first_name }} {{ $user->last_name }}</h1>
+                        @if($user->profile?->is_verified)
+                            <span class="text-sm" title="Alumno Verificado">✅</span>
+                        @endif
+                        @if($user->hasRole('admin'))
+                            <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-red-200">Admin 🛡️</span>
+                        @endif
                     </div>
-                @endif
-            </div>
 
-            <div class="text-center md:text-left flex-1">
-                <h1 class="text-3xl font-black text-gray-900 flex items-center justify-center md:justify-start gap-2">
-                    {{ $user->first_name }} {{ $user->last_name }}
-                </h1>
+                    <p class="text-sm font-semibold text-[#13c1ac] mb-2">
+                        🎓 {{ $user->profile?->course ?? 'Alumno del centro' }}
+                    </p>
 
-                <p class="text-gray-500 font-medium mb-3">
-                    {{ $user->profile->course ?? 'Estudiante del centro' }}
-                </p>
-
-                <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
-                    <div class="flex text-amber-400">
-                        @for($i = 1; $i <= 5; $i++)
-                            <svg class="w-5 h-5 {{ $i <= round($averageRating) ? 'fill-current' : 'text-gray-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        @endfor
+                    <div class="flex items-center justify-center sm:justify-start gap-1.5 text-sm">
+                        <div class="flex text-amber-400">
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= round($averageRating))
+                                    ⭐
+                                @else
+                                    <span class="opacity-30 grayscale">⭐</span>
+                                @endif
+                            @endfor
+                        </div>
+                        <span class="font-bold text-gray-700 ml-1">{{ number_format($averageRating, 1) }}</span>
+                        <span class="text-gray-400 text-xs">({{ $totalReviews }} {{ $totalReviews == 1 ? 'reseña' : 'reseñas' }})</span>
                     </div>
-                    <span class="text-sm font-bold text-gray-700">({{ number_format($averageRating, 1) }})</span>
-                    <span class="text-sm text-gray-400 font-medium">• {{ $totalReviews }} valoraciones</span>
-                </div>
-
-                <p class="text-gray-600 text-sm max-w-2xl leading-relaxed">
-                    {{ $user->profile->bio ?? 'Este usuario aún no ha escrito una biografía.' }}
-                </p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 w-full md:w-auto">
-                <div class="bg-gray-50 p-4 rounded-2xl text-center border border-gray-100">
-                    <div class="text-xl font-black text-gray-900">{{ $products->count() }}</div>
-                    <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">En venta</div>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-2xl text-center border border-gray-100">
-                    <div class="text-xl font-black text-gray-900">{{ $user->reviewsWritten->count() }}</div>
-                    <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Votos dados</div>
                 </div>
             </div>
+
+            @if(Auth::id() !== $user->user_id)
+                <div class="shrink-0 w-full md:w-auto">
+                    <span class="block text-center text-xs text-gray-400 bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
+                        🟢 Miembro desde {{ $user->created_at->format('M Y') }}
+                    </span>
+                </div>
+            @endif
         </div>
+
+        @if($user->profile?->bio)
+            <div class="mt-6 pt-6 border-t border-gray-100">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Sobre mí</h3>
+                <p class="text-sm text-gray-600 leading-relaxed bg-gray-50/50 p-4 rounded-xl border border-gray-100/70">
+                    {{ $user->profile->bio }}
+                </p>
+            </div>
+        @endif
     </div>
 
-    <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-2">
-        📦 Productos de {{ $user->first_name }}
-    </h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-    @if($products->isEmpty())
-        <div class="bg-white rounded-2xl p-12 text-center border border-dashed border-gray-300">
-            <p class="text-gray-400 font-medium">Este vendedor no tiene productos activos ahora mismo.</p>
-        </div>
-    @else
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            @foreach($products as $product)
-                <a href="{{ route('products.show', $product->product_id) }}" wire:navigate class="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition flex flex-col no-underline text-current">
-                    <div class="relative bg-gray-100 aspect-square flex items-center justify-center text-gray-300">
-                        <span class="text-4xl">📚</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="text-base font-extrabold text-gray-900">{{ number_format($product->price, 0) }} €</div>
-                        <h3 class="text-xs text-gray-600 line-clamp-1">{{ $product->title }}</h3>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    @endif
+        <div class="lg:col-span-2 space-y-4">
+            <h2 class="text-lg font-black text-gray-800 tracking-tight flex items-center gap-2">
+                📦 Productos en venta <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full">{{ count($products) }}</span>
+            </h2>
 
+            @if($products->isEmpty())
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 text-center text-gray-400 text-sm">
+                    <span class="text-3xl block mb-2">🎒</span>
+                    Este alumno no tiene ningún producto disponible en este momento.
+                </div>
+            @else
+                <div class="grid grid-cols-2 gap-4">
+                    @foreach($products as $product)
+                        <div class="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition flex flex-col justify-between group relative">
+
+                            <div class="relative bg-gray-100 aspect-square w-full flex items-center justify-center text-gray-300 shrink-0">
+                                <a href="{{ route('products.show', $product->product_id) }}" wire:navigate class="absolute inset-0 z-10"></a>
+                                <img src="{{ $product->image_path ?? 'https://placehold.co/600x600?text=Sin+Foto' }}" alt="{{ $product->title }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-200">
+                                <span class="absolute bottom-2 left-2 bg-black/50 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-xs z-20">
+                                    {{ $product->category->category_name }}
+                                </span>
+                            </div>
+
+                            <div class="p-3 flex flex-col flex-1 justify-between relative">
+                                <a href="{{ route('products.show', $product->product_id) }}" wire:navigate class="absolute inset-0 z-10"></a>
+                                <div class="relative z-20 pointer-events-none">
+                                    <div class="text-base font-extrabold text-gray-900 mb-0.5">{{ number_format($product->price, 0) }} €</div>
+                                    <h3 class="text-sm font-normal text-gray-700 line-clamp-2 leading-tight group-hover:text-[#13c1ac] transition">{{ $product->title }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <div class="space-y-4">
+            <h2 class="text-lg font-black text-gray-800 tracking-tight flex items-center gap-2">
+                💬 Reseñas de compañeros <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full">{{ $totalReviews }}</span>
+            </h2>
+
+            @if($user->reviewsReceived->isEmpty())
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 text-center text-gray-400 text-sm">
+                    <span class="text-3xl block mb-2">🤝</span>
+                    Aún no ha recibido valoraciones de intercambios.
+                </div>
+            @else
+                <div class="space-y-3">
+                    @foreach($user->reviewsReceived as $review)
+                        <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-xs">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 bg-gray-100 text-gray-600 text-xs font-bold rounded-full flex items-center justify-center uppercase">
+                                        {{ substr($review->reviewer->first_name ?? 'U', 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-gray-800">{{ $review->reviewer->first_name }}</h4>
+                                        <p class="text-[9px] text-gray-400">{{ $review->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="text-[10px]">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        {{ $i <= $review->rating ? '⭐' : '☆' }}
+                                    @endfor
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-600 italic leading-relaxed">
+                                "{{ $review->comment }}"
+                            </p>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+    </div>
 </main>
