@@ -110,10 +110,19 @@
                                        class="bg-amber-500 hover:bg-amber-600 text-white p-1.5 rounded-lg shadow-md transition no-underline text-xs flex items-center justify-center w-7 h-7" title="Editar Anuncio">
                                         ✏️
                                     </a>
-                                    <button type="button" wire:click.stop="deleteProduct('{{ $product->product_id }}')" wire:confirm="¿Seguro que quieres borrar este producto como administrador?"
-                                            class="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-lg shadow-md transition border-none cursor-pointer text-xs flex items-center justify-center w-7 h-7" title="Eliminar">
-                                        🗑️
-                                    </button>
+                                    <x-modal-confirm
+                                        :id="$product->product_id"
+                                        method="deleteProduct"
+                                        title="¿Eliminar este anuncio?"
+                                    >
+                                        <button type="button" class="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-200 transition text-sm cursor-pointer" title="Eliminar Anuncio">
+                                            🗑️
+                                        </button>
+
+                                        <x-slot:description>
+                                            Esta acción no se puede deshacer. El anuncio de <span class="font-bold text-gray-700">"{{ $product->title }}"</span> se borrará permanentemente de la plataforma del instituto.
+                                        </x-slot:description>
+                                    </x-modal-confirm>
                                 </div>
                                 @endhasrole
                             </div>
@@ -131,7 +140,9 @@
                                 </div>
 
                                 <div class="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400 relative z-20">
-                                    <span class="truncate pointer-events-none">📍 Aula / Recreo</span>
+                                    <span class="truncate pointer-events-none flex items-center gap-0.5 max-w-[60%]" title="{{ $product->location ?? 'Por acordar' }}">
+                                        📍 {{ $product->location ?? 'Por acordar' }}
+                                    </span>
                                     <a href="{{ route('user.profile', $product->seller_id) }}" wire:navigate
                                        class="font-medium text-gray-500 shrink-0 flex items-center gap-1 hover:text-[#13c1ac] no-underline transition relative z-30 pointer-events-auto">
                                         {{ $product->seller->first_name }}

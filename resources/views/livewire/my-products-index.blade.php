@@ -98,12 +98,20 @@
                                 👁️
                             </a>
 
-                            <button wire:click="deleteProduct({{ $product->product_id }})"
-                                    onclick="return confirm('¿Seguro que quieres borrar este anuncio para siempre?')"
-                                    class="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-200 transition text-sm cursor-pointer"
-                                    title="Eliminar Anuncio">
-                                🗑️
-                            </button>
+                            <x-modal-confirm
+                                :id="$product->product_id"
+                                method="deleteProduct"
+                                title="¿Eliminar este anuncio?"
+                            >
+                                {{-- Todo lo que metas aquí dentro será el botón visible en la fila --}}
+                                <button type="button" class="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-200 transition text-sm cursor-pointer" title="Eliminar Anuncio">
+                                    🗑️
+                                </button>
+
+                                <x-slot:description>
+                                    Esta acción no se puede deshacer. El anuncio de <span class="font-bold text-gray-700">"{{ $product->title }}"</span> se borrará permanentemente de la plataforma del instituto.
+                                </x-slot:description>
+                            </x-modal-confirm>
                         </div>
 
                     </div>

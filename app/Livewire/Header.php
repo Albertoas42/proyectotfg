@@ -3,16 +3,23 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Message; // 🚨 Importamos el modelo Message
+use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On; // 🚨 IMPORTANTE: Necesitamos este atributo en Livewire v3
 
 class Header extends Component
 {
-    // Mantenemos tu propiedad pública para la pestaña activa
     public $currentTab;
 
-    // 🚨 NUEVO: Escuchamos el evento para refrescar el contador en tiempo real
-    protected $listeners = ['refreshNotifications' => '$refresh'];
+    // 🎧 ESCUCHA EL EVENTO EN TIEMPO REAL
+    // Al usar #[On(...)], en cuanto el chat lanza el dispatch, Livewire ejecuta
+    // esta función automáticamente y refresca el componente entero al instante.
+    #[On('update-notification-count')]
+    public function refreshHeader()
+    {
+        // Al dejar este método vacío pero con el atributo #[On],
+        // obligamos a Livewire a volver a ejecutar el render() limpiando el contador.
+    }
 
     public function selectTab($tabName)
     {

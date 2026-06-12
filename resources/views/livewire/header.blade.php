@@ -18,11 +18,13 @@
                    class="px-4 py-2 rounded-full transition flex items-center gap-1 {{ request()->routeIs('chats.inbox') ? 'text-[#13c1ac] bg-[#13c1ac]/10 font-bold' : 'hover:bg-gray-100 text-gray-600' }}">
                     💬 Mensajes
 
-                    @if(isset($unreadCount) && $unreadCount > 0)
-                        <span class="bg-red-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold animate-pulse">
-                            {{ $unreadCount }}
-                        </span>
-                    @endif
+                    <div wire:key="header-unread-count-{{ $unreadCount ?? 0 }}" class="inline-flex items-center">
+                        @if(isset($unreadCount) && $unreadCount > 0)
+                            <span class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold animate-pulse">
+                                {{ $unreadCount }}
+                            </span>
+                        @endif
+                    </div>
                 </a>
 
                 <a href="{{ route('my-products.index') }}" wire:navigate

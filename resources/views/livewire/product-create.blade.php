@@ -46,6 +46,26 @@
             </div>
 
             <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase mb-1">📍 Punto de encuentro preferido</label>
+                <div class="relative">
+                    <select wire:model="location" class="w-full bg-gray-50 p-2.5 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac] appearance-none cursor-pointer font-medium text-gray-700">
+                        <option value="Patio Central">Patio Central (Recreo)</option>
+                        <option value="Biblioteca">Biblioteca del Instituto</option>
+                        <option value="Cantina / Cafetería">Cantina / Cafetería</option>
+                        <option value="Entrada Principal">Puerta de Entrada Principal</option>
+                        <option value="Conserjería">Junto a Conserjería</option>
+                        <option value="A acordar por chat">A acordar con el compañero por chat</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                        </svg>
+                    </div>
+                </div>
+                @error('location') <span class="text-xs text-red-500 font-medium mt-1 block">⚠️ {{ $message }}</span> @enderror
+            </div>
+
+            <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Descripción del anuncio</label>
                 <textarea wire:model="description" rows="5" placeholder="Detalla el estado del artículo, si lo entregas con caja, tus zonas o aulas preferidas del instituto para el intercambio..."
                           class="w-full bg-gray-50 p-2.5 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac] resize-none"></textarea>
