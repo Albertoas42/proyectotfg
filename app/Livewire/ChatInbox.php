@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatInbox extends Component
 {
-    public $activeChat = null;
+    public $activeChat;
     public $newMessageContent = '';
     public $offerPrice = '';
 
@@ -124,6 +124,31 @@ class ChatInbox extends Component
         }
 
         $this->selectChat($this->activeChat->id);
+    }
+    public function closeDeal()
+    {
+        if (Auth::id() !== $this->activeChat->seller_id) return;
+
+        // 1. Marcar como vendido
+        $this->activeChat->product->update(['status' => 'sold']);
+
+
+        \App\Models\Message::create([
+            'chat_id'   => $this->activeChat->id,
+            'sender_id' => Auth::id(), // El vendedor
+            'content'   => '⚠️ El producto ha sido vendido. ¡Acuerdo cerrado!',
+            'is_read'   => false,
+        ]);
+
+        $this->dispatch('$refresh');
+    }
+    // En ChatInbox.php
+    public function openReviewModal()
+    {
+        $this->dispatch('open-review-modal',
+            productId: $this->activeChat->product_id,
+            sellerId: $this->activeChat->seller_id
+        );
     }
 
     public function render()

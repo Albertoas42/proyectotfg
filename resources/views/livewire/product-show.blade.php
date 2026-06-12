@@ -32,7 +32,6 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-4 md:p-6 rounded-2xl border border-gray-200 shadow-xs">
 
         <div class="bg-gray-100 aspect-square rounded-xl flex items-center justify-center text-gray-300 relative overflow-hidden">
-
             <img src="{{ $product->image_url ? asset($product->image_url) : 'https://placehold.co/600x600?text=Sin+Foto' }}"
                  alt="{{ $product->title }}"
                  class="w-full h-full object-cover {{ $product->status == 'sold' ? 'grayscale opacity-60' : '' }}">
@@ -43,82 +42,8 @@
         </div>
 
         <div class="flex flex-col justify-between">
-
             @if($isEditing)
                 <form wire:submit.prevent="updateProduct" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Título</label>
-                        <input type="text" wire:model="editTitle" class="w-full bg-gray-50 p-2.5 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac]">
-                        @error('editTitle') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Precio (€)</label>
-                            <input type="number" wire:model="editPrice" class="w-full bg-gray-50 p-2.5 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac]">
-                            @error('editPrice') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Punto de encuentro</label>
-                            <div class="relative">
-                                <select wire:model="editLocation" class="w-full bg-gray-50 p-2.5 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac] appearance-none cursor-pointer font-medium text-gray-700">
-                                    <option value="Patio Central">Patio Central (Recreo)</option>
-                                    <option value="Biblioteca">Biblioteca del Instituto</option>
-                                    <option value="Cantina / Cafetería">Cantina / Cafetería</option>
-                                    <option value="Entrada Principal">Puerta de Entrada Principal</option>
-                                    <option value="Conserjería">Junto a Conserjería</option>
-                                    <option value="A acordar por chat">A acordar por chat</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-                            @error('editLocation') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Descripción</label>
-                        <textarea wire:model="editDescription" rows="4" class="w-full bg-gray-50 p-2.5 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac] resize-none"></textarea>
-                        @error('editDescription') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Actualizar Foto (Opcional)</label>
-                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                            <div class="relative w-full sm:w-auto">
-                                <input type="file" wire:model="editImage" id="edit-product-image" class="hidden" accept="image/*">
-                                <label for="edit-product-image" class="w-full sm:w-auto block text-center bg-white border border-gray-200 hover:border-[#13c1ac] px-4 py-2 rounded-xl text-xs font-bold text-gray-600 cursor-pointer transition shadow-xs">
-                                    📸 Cambiar imagen
-                                </label>
-                            </div>
-
-                            <div wire:loading wire:target="editImage" class="text-xs text-gray-400 font-medium animate-pulse">
-                                Procesando foto... ⏳
-                            </div>
-
-                            @if ($editImage)
-                                <div class="w-14 h-14 bg-white rounded-lg border border-gray-200 overflow-hidden relative shrink-0">
-                                    <img src="{{ $editImage->temporaryUrl() }}" class="w-full h-full object-cover">
-                                </div>
-                            @elseif($product->image_url)
-                                <div class="w-14 h-14 bg-white rounded-lg border border-gray-200 overflow-hidden relative shrink-0 opacity-60">
-                                    <img src="{{ asset($product->image_url) }}" class="w-full h-full object-cover">
-                                </div>
-                            @endif
-                        </div>
-                        @error('editImage') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="flex gap-2 pt-2">
-                        <button type="button" wire:click="$set('isEditing', false)" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-bold rounded-xl transition border-none cursor-pointer">
-                            Cancelar
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="flex-1 py-2.5 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition border-none cursor-pointer disabled:opacity-50">
-                            💾 Guardar Cambios
-                        </button>
-                    </div>
                 </form>
             @else
                 <div>
@@ -130,18 +55,16 @@
                     </h1>
 
                     <div class="flex flex-wrap gap-2 mb-6">
-            <span class="text-xs font-semibold uppercase px-2.5 py-1 rounded-md bg-gray-100 text-gray-600">
-                @if($product->item_condition == 'new') ✨ Nuevo @elseif($product->item_condition == 'good') 👍 Bueno @else 📁 Usado @endif
-            </span>
-
+                        <span class="text-xs font-semibold uppercase px-2.5 py-1 rounded-md bg-gray-100 text-gray-600">
+                            @if($product->item_condition == 'new') ✨ Nuevo @elseif($product->item_condition == 'good') 👍 Bueno @else 📁 Usado @endif
+                        </span>
                         <span class="text-xs font-semibold uppercase px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 flex items-center gap-1">
-                📍 {{ $product->location ?? 'Por acordar' }}
-            </span>
-
+                            📍 {{ $product->location ?? 'Por acordar' }}
+                        </span>
                         @if(Gate::allows('manage-all-products'))
                             <span class="text-xs font-bold uppercase px-2.5 py-1 rounded-md bg-red-100 text-red-700 animate-pulse">
-                    🛡️ Modo Admin Activo
-                </span>
+                                🛡️ Modo Admin Activo
+                            </span>
                         @endif
                     </div>
                     <hr class="border-gray-100 my-4">
@@ -150,20 +73,16 @@
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-
                     <a href="{{ route('user.profile', $product->seller_id) }}" wire:navigate
                        class="flex items-center gap-3 mb-4 no-underline group block">
-
                         <div class="w-10 h-10 bg-[#13c1ac]/20 text-[#13c1ac] font-bold rounded-full flex items-center justify-center text-sm transition group-hover:bg-[#13c1ac]/30">
                             {{ substr($product->seller->first_name, 0, 1) }}
                         </div>
-
                         <div>
                             <h4 class="text-sm font-bold text-gray-800 group-hover:text-[#13c1ac] transition flex items-center gap-1">
                                 {{ $product->seller->first_name }} {{ $product->seller->last_name }}
                                 @if($product->seller->profile?->is_verified) <span class="text-xs">✅</span> @endif
                             </h4>
-                            <p class="text-[11px] text-gray-400">Ver perfil de la comunidad ➜</p>
                         </div>
                     </a>
 
@@ -173,16 +92,21 @@
                         </div>
                     @else
                         @if($product->status == 'sold')
-                            <button disabled
-                                    class="w-full py-3 bg-gray-300 text-gray-500 text-sm font-bold rounded-xl text-center border-none cursor-not-allowed flex items-center justify-center gap-2">
+                            <button disabled class="w-full py-3 bg-gray-300 text-gray-500 text-sm font-bold rounded-xl text-center border-none cursor-not-allowed flex items-center justify-center gap-2">
                                 🚫 Producto vendido
                             </button>
                         @else
-                            <button wire:click="startChat"
-                                    class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition text-center border-none cursor-pointer flex items-center justify-center gap-2">
+                            <button wire:click="startChat" class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition text-center border-none cursor-pointer flex items-center justify-center gap-2">
                                 💬 Chatear / Reservar
                             </button>
                         @endif
+
+                        <div class="mt-4 text-center">
+                            <button wire:click="$dispatch('open-report-modal', { productId: {{ $product->product_id }} })"
+                                    class="text-gray-400 hover:text-red-600 transition flex items-center justify-center gap-1 text-[11px] font-semibold cursor-pointer border-none bg-transparent">
+                                🚩 Reportar anuncio
+                            </button>
+                        </div>
                     @endif
 
                     @if (session()->has('error'))
@@ -192,7 +116,6 @@
                     @endif
                 </div>
             @endif
-
         </div>
     </div>
 </main>

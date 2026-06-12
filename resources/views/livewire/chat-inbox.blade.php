@@ -163,7 +163,29 @@
                             </div>
                         @endforeach
                     </div>
+                    @if($activeChat->product->status === 'available')
+                        @foreach($messages as $message)
+                            <p>{{ $message->content }}</p>
+                        @endforeach
 
+                        @if(Auth::id() === $activeChat->seller_id)
+                            <button wire:click="closeDeal" class="bg-[#13c1ac] text-white p-2 rounded">
+                                🤝 Cerrar acuerdo
+                            </button>
+                        @endif
+
+                    @else
+                        <div class="bg-gray-100 p-4 rounded-xl text-center">
+                            <p class="font-bold text-gray-700 mb-4">✅ Este producto ya ha sido vendido.</p>
+
+                            @if(Auth::id() === $activeChat->buyer_id)
+                                <h4 class="font-bold mb-2">¡Valora al vendedor!</h4>
+                                <button wire:click="openReviewModal" class="bg-[#13c1ac] text-white px-6 py-2 rounded-xl font-bold relative z-50">
+                                    Escribir valoración
+                                </button>
+                            @endif
+                        </div>
+                    @endif
                     <div class="p-4 border-t border-gray-200 bg-white shrink-0">
                         <form wire:submit.prevent="sendMessage" class="flex gap-2">
                             <input type="text" wire:model="newMessageContent" placeholder="Escribe un mensaje seguro..." class="flex-1 bg-gray-50 px-4 py-3 text-sm rounded-xl border border-gray-200 focus:outline-none focus:border-[#13c1ac]">

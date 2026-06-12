@@ -17,6 +17,8 @@
 
 <livewire:footer />
 
+@livewire('review-modal')
+@livewire('report-modal')
 @livewireScripts
 </body>
 </html>
