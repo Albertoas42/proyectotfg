@@ -3,50 +3,59 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Models\Product;
-use App\Models\Category; // Asegúrate de tener este modelo
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class ProductCreate extends Component
 {
-    // Propiedades del formulario
-    public $title = '';
-    public $description = '';
-    public $price = '';
-    public $category_id = '';
-    public $item_condition = 'good'; // Por defecto 'Bueno'
+    use WithFileUploads;
 
-    // Reglas de validación
+    public $title;
+    public $price;
+    public $category_id;
+    public $item_condition = 'good'; // 🚨 Cambiado a tu nombre de columna
+    public $description;
+    public $image;
+
     protected $rules = [
-        'title' => 'required|min:5|max:100',
-        'description' => 'required|min:10',
-        'price' => 'required|numeric|min:0',
+        'title' => 'required|string|min:5|max:100',
+        'price' => 'required|numeric|min:0|max:9999',
         'category_id' => 'required|exists:categories,category_id',
-        'item_condition' => 'required|in:new,good,used',
+        'item_condition' => 'required|in:new,good,worn', // 🚨 Validamos contra tu enum real ('worn')
+        'description' => 'required|string|min:10|max:1000',
+        'image' => 'nullable|image|max:2048',
     ];
 
-    public function save()
+    public function saveProduct()
     {
         $this->validate();
+
+        $storedPath = null;
+        if ($this->image) {
+            $storedPath = $this->image->store('products', 'public');
+        }
 
         Product::create([
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
-            'category_id' => $this->category_id,
-            'item_condition' => $this->item_condition,
-            'seller_id' => Auth::user()->user_id, // El usuario logueado es el vendedor
+            'item_condition' => $this->item_condition, // 🚨 Guardamos en tu columna original
+            'image_url' => $storedPath ? 'storage/' . $storedPath : null,
             'status' => 'available',
+            'category_id' => $this->category_id,
+            'seller_id' => Auth::id(),
+            'buyer_id' => null,
         ]);
 
-        // Mensaje de éxito y redirección index
-        session()->flash('message', '¡Anuncio publicado con éxito! 🎉');
+        session()->flash('message', '¡Anuncio publicado con éxito en el instituto!');
+
         return $this->redirect(route('products.index'), navigate: true);
     }
 
     public function render()
     {
-        // Pasamos las categorías a la vista para el desplegable
         return view('livewire.product-create', [
             'categories' => Category::all()
         ]);

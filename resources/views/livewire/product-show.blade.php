@@ -32,8 +32,12 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-4 md:p-6 rounded-2xl border border-gray-200 shadow-xs">
 
         <div class="bg-gray-100 aspect-square rounded-xl flex items-center justify-center text-gray-300 relative overflow-hidden">
-            <span class="text-9xl">📚</span>
-            <span class="absolute top-4 left-4 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full">
+
+            <img src="{{ $product->image_url ? asset($product->image_url) : 'https://placehold.co/600x600?text=Sin+Foto' }}"
+                 alt="{{ $product->title }}"
+                 class="w-full h-full object-cover {{ $product->status == 'sold' ? 'grayscale opacity-60' : '' }}">
+
+            <span class="absolute bottom-4 left-4 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-xs z-20">
                 {{ $product->category->category_name }}
             </span>
         </div>
@@ -63,8 +67,12 @@
                 </form>
             @else
                 <div>
-                    <div class="text-3xl font-black text-gray-900 mb-2">{{ number_format($product->price, 2) }} €</div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-4 leading-tight">{{ $product->title }}</h1>
+                    <div class="text-3xl font-black text-gray-900 mb-2 {{ $product->status == 'sold' ? 'line-through text-gray-400' : '' }}">
+                        {{ number_format($product->price, 2) }} €
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800 mb-4 leading-tight {{ $product->status == 'sold' ? 'text-gray-400 italic' : '' }}">
+                        {{ $product->title }}
+                    </h1>
 
                     <div class="flex gap-2 mb-6">
                         <span class="text-xs font-semibold uppercase px-2.5 py-1 rounded-md bg-gray-100 text-gray-600">
@@ -104,10 +112,17 @@
                             Este anuncio es tuyo
                         </div>
                     @else
-                        <button wire:click="startChat"
-                                class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition text-center border-none cursor-pointer flex items-center justify-center gap-2">
-                            💬 Chatear / Reservar
-                        </button>
+                        @if($product->status == 'sold')
+                            <button disabled
+                                    class="w-full py-3 bg-gray-300 text-gray-500 text-sm font-bold rounded-xl text-center border-none cursor-not-allowed flex items-center justify-center gap-2">
+                                🚫 Producto vendido
+                            </button>
+                        @else
+                            <button wire:click="startChat"
+                                    class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl shadow-xs transition text-center border-none cursor-pointer flex items-center justify-center gap-2">
+                                💬 Chatear / Reservar
+                            </button>
+                        @endif
                     @endif
 
                     @if (session()->has('error'))

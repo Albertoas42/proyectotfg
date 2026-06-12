@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/perfil/{user}', \App\Livewire\UserProfile::class)->name('user.profile');
 
     Route::get('/mensajes/{chatId?}', ChatInbox::class)->name('chats.inbox');
-    Route::get('/mis-anuncios', ProductCatalog::class)->name('my-products.index');
+    Route::get('/mis-anuncios', \App\Livewire\MyProductsIndex::class)->name('my-products.index');
     Route::get('/favoritos', App\Livewire\FavoritesIndex::class)->name('favorites.index');
 
 
