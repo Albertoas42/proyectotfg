@@ -73,7 +73,7 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Foto del producto (Opcional)</label>
+                <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Foto del producto</label>
                 <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
 
                     <div class="relative w-full sm:w-auto">

@@ -1,14 +1,10 @@
 <main class="max-w-5xl mx-auto px-4 py-6">
 
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="mb-6 flex sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-800 tracking-tight">Mis Anuncios</h1>
             <p class="text-xs text-gray-400">Administra los productos que has publicado en el instituto</p>
         </div>
-        <a href="{{ route('products.create') }}" wire:navigate
-           class="bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow-xs transition no-underline text-center shrink-0">
-            + Subir otro producto
-        </a>
     </div>
 
     @if (session()->has('message'))

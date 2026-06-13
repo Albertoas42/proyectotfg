@@ -48,13 +48,61 @@ class DatabaseSeeder extends Seeder
         $allUsers = User::whereHas('roles', fn($q) => $q->where('name', 'user'))->get();
 
         // 5. Arrays de datos reales para productos
+        // 5. Arrays de datos reales para productos (añadimos la ruta de la imagen)
         $datosProductos = [
-            ['title' => 'Calculadora Casio FX-991SP', 'price' => 15, 'cat' => 2, 'desc' => 'Muy bien cuidada, pilas recién cambiadas.'],
-            ['title' => 'Libro Historia 2º Bach', 'price' => 20, 'cat' => 1, 'desc' => 'Edición 2024, sin anotaciones.'],
-            ['title' => 'Teclado Mecánico Redragon', 'price' => 35, 'cat' => 3, 'desc' => 'Lo vendo porque he comprado uno nuevo.'],
-            ['title' => 'Escuadra y Cartabón profesional', 'price' => 5, 'cat' => 2, 'desc' => 'Imprescindibles para Dibujo Técnico.'],
-            ['title' => 'Apuntes de Bases de Datos', 'price' => 10, 'cat' => 1, 'desc' => 'Resúmenes completos de todo el curso.'],
+            [
+                'title' => 'Calculadora Casio FX-991SP',
+                'price' => 15,
+                'cat' => 2,
+                'desc' => 'Muy bien cuidada, pilas recién cambiadas.',
+                'img' => 'products/casio.jpg' // Asegúrate de que existe este archivo
+            ],
+            [
+                'title' => 'Libro Historia 2º Bach',
+                'price' => 20,
+                'cat' => 1,
+                'desc' => 'Edición 2024, sin anotaciones.',
+                'img' => 'products/historia.jpg'
+            ],
+            [
+                'title' => 'Teclado Mecánico Redragon',
+                'price' => 35,
+                'cat' => 3,
+                'desc' => 'Lo vendo porque he comprado uno nuevo.',
+                'img' => 'products/teclado.jpg'
+            ],
+            [
+                'title' => 'Escuadra y Cartabón profesional',
+                'price' => 5,
+                'cat' => 2,
+                'desc' => 'Imprescindibles para Dibujo Técnico.',
+                'img' => 'products/reglas.jpg'
+            ],
+            [
+                'title' => 'Apuntes de Bases de Datos',
+                'price' => 10,
+                'cat' => 1,
+                'desc' => 'Resúmenes completos de todo el curso.',
+                'img' => 'products/apuntes.jpg'
+            ],
         ];
+
+        $locations = ['Patio Central', 'Biblioteca', 'Cantina', 'Entrada Principal'];
+
+        // 6. Crear Productos
+        foreach ($datosProductos as $p) {
+            Product::create([
+                'title' => $p['title'],
+                'description' => $p['desc'],
+                'price' => $p['price'],
+                'item_condition' => 'good',
+                'status' => 'available',
+                'category_id' => $p['cat'],
+                'seller_id' => $allUsers->random()->user_id,
+                'location' => $locations[array_rand($locations)],
+                'image_url' => $p['img'], // Aquí se guarda la ruta
+            ]);
+        }
 
         $locations = ['Patio Central', 'Biblioteca', 'Cantina', 'Entrada Principal'];
 

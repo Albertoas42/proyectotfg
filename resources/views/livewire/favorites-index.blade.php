@@ -28,9 +28,10 @@
 
                         <a href="{{ route('products.show', $product->product_id) }}" wire:navigate class="absolute inset-0 z-10"></a>
 
-                        <img src="{{ $product->image_path ?? 'https://placehold.co/600x600?text=Sin+Foto' }}"
+                        <img src="{{ $product->image_url ? asset($product->image_url) : 'https://placehold.co/600x600?text=Sin+Foto' }}"
                              alt="{{ $product->title }}"
-                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-200">
+                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-200 {{ $product->status == 'sold' ? 'grayscale opacity-60' : '' }}">
+
 
                         <span class="absolute bottom-2 left-2 bg-black/50 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-xs z-20">
                             {{ $product->category->category_name }}

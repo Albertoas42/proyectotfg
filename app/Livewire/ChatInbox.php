@@ -155,21 +155,26 @@ class ChatInbox extends Component
     {
         $authId = Auth::id();
 
+        // 1. Obtener chats (tu código actual está bien)
         $chats = Chat::with(['product', 'buyer', 'seller', 'lastMessage'])
-            ->withCount(['messages as unread_messages_count' => function ($query) use ($authId) {
-                $query->where('sender_id', '!=', $authId)->where('is_read', false);
-            }])
-            ->where(function($query) use ($authId) {
-                $query->where('buyer_id', $authId)
-                    ->orWhere('seller_id', $authId);
-            })
-            ->get()
-            ->sortByDesc(function ($chat) {
-                return $chat->lastMessage ? $chat->lastMessage->created_at : $chat->created_at;
-            });
+            // ... (resto de tu consulta)
+            ->get();
 
+        // 2. Obtener los mensajes del chat seleccionado
+        $messages = [];
+        $activeChat = null;
+
+        if ($this->activeChat) {
+            $activeChat = $this->activeChat;
+            // Aquí usamos los mensajes que ya carga activeChat o los recargamos
+            $messages = $activeChat->messages()->orderBy('created_at', 'asc')->get();
+        }
+
+        // AQUÍ ESTABA EL ERROR: faltaba incluir 'messages' en el array
         return view('livewire.chat-inbox', [
-            'chats' => $chats
+            'chats' => $chats,
+            'activeChat' => $activeChat,
+            'messages' => $messages
         ]);
     }
 }

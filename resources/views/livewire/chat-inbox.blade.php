@@ -165,7 +165,7 @@
                     </div>
                     @if($activeChat->product->status === 'available')
                         @foreach($messages as $message)
-                            <p>{{ $message->content }}</p>
+
                         @endforeach
 
                         @if(Auth::id() === $activeChat->seller_id)
