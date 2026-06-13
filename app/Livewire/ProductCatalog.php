@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\Product;
 use Livewire\Attributes\On;
-use Livewire\WithPagination; // 🚨 Asegúrate de que esta línea esté así
+use Livewire\WithPagination;
 
 class ProductCatalog extends Component
 {
-    use WithPagination; // Activa la paginación de Livewire
+    use WithPagination;
 
     public $tab = 'catalogo';
 
@@ -18,11 +18,6 @@ class ProductCatalog extends Component
     public $selectedCategory = '';
     public $selectedCondition = '';
 
-    /**
-     * 🚀 SOLUCIÓN: Cambiamos $this->resetPage() por $this->gotoPage(1)
-     * Esto obliga a Livewire a volver a la primera página de forma segura
-     * en cuanto cambie cualquier filtro del catálogo.
-     */
     public function updatingSearch() { $this->gotoPage(1); }
     public function updatingSelectedCategory() { $this->gotoPage(1); }
     public function updatingSelectedCondition() { $this->gotoPage(1); }
@@ -37,7 +32,6 @@ class ProductCatalog extends Component
     {
         $products = Product::query()
             ->with(['seller', 'category'])
-            // ✂️ Hemos quitado ->available() de aquí para que entren reservados y vendidos
             ->search($this->search)
             ->ofCategory($this->selectedCategory)
             ->ofCondition($this->selectedCondition)
@@ -48,7 +42,6 @@ class ProductCatalog extends Component
     }
     public function deleteProduct($productId)
     {
-        // Verificación de seguridad en backend usando Spatie o Roles
         if (!auth()->user()->hasRole('admin')) {
             abort(403, 'Acción no autorizada.');
         }

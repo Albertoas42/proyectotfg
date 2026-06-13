@@ -15,7 +15,6 @@ class ProductShow extends Component
     public Product $product;
     public $isEditing = false;
 
-    // Propiedades editables (Asegúrate de que coincidan con el Blade)
     public $editTitle;
     public $editPrice;
     public $editDescription;
@@ -27,7 +26,6 @@ class ProductShow extends Component
         $this->product = $product->load(['seller', 'category']);
     }
 
-    // Este método lo llamamos desde el botón del Blade
     public function loadEditData()
     {
         $this->editTitle = $this->product->title;

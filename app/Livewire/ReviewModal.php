@@ -14,7 +14,6 @@ class ReviewModal extends Component
     public $rating = 5;
     public $comment;
 
-    // Escuchamos el evento para abrir el modal
     protected $listeners = ['open-review-modal' => 'openModal'];
 
     public function openModal($productId, $sellerId)

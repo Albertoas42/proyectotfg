@@ -18,7 +18,7 @@ class ProductCreate extends Component
     public $item_condition = 'good';
     public $description;
     public $image;
-    public $location = 'Patio Central'; // 📍 Propiedad añadida con valor por defecto
+    public $location = 'Patio Central';
 
     protected $rules = [
         'title' => 'required|string|min:5|max:100',
@@ -27,7 +27,7 @@ class ProductCreate extends Component
         'item_condition' => 'required|in:new,good,worn',
         'description' => 'required|string|min:10|max:1000',
         'image' => 'nullable|image|max:2048',
-        'location' => 'required|string|max:100', // 📍 Validamos la localización
+        'location' => 'required|string|max:100',
     ];
 
     public function saveProduct()
@@ -49,7 +49,7 @@ class ProductCreate extends Component
             'category_id' => $this->category_id,
             'seller_id' => Auth::id(),
             'buyer_id' => null,
-            'location' => $this->location, // 📍 Guardamos el punto de encuentro en la base de datos
+            'location' => $this->location,
         ]);
 
         session()->flash('message', '¡Anuncio publicado con éxito en el instituto!');

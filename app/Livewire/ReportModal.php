@@ -10,7 +10,7 @@ class ReportModal extends Component
 {
     public $isOpen = false;
     public $productId;
-    public $reason = 'Contenido inapropiado'; // Valor por defecto
+    public $reason = 'Contenido inapropiado';
 
     protected $listeners = ['open-report-modal' => 'openModal'];
 

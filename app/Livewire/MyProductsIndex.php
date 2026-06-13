@@ -15,8 +15,6 @@ class MyProductsIndex extends Component
             ->where('product_id', $productId)
             ->firstOrFail();
 
-        // Si el producto tiene imagen en storage, podrías borrarla aquí con Storage::disk('public')->delete(...)
-
         $product->delete();
 
         session()->flash('message', 'Anuncio eliminado correctamente.');
@@ -27,7 +25,6 @@ class MyProductsIndex extends Component
             ->where('seller_id', Auth::id())
             ->firstOrFail();
 
-        // Forzamos a que guarde 'available', 'reserved' o 'sold'
         $product->update([
             'status' => trim(strtolower($newStatus))
         ]);
@@ -37,7 +34,6 @@ class MyProductsIndex extends Component
 
     public function render()
     {
-        // Traemos todos los productos donde el vendedor sea el alumno actual
         $myProducts = Product::where('seller_id', Auth::id())
             ->with('category')
             ->latest()

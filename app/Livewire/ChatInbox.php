@@ -47,7 +47,7 @@ class ChatInbox extends Component
             'chat_id' => $this->activeChat->id,
             'sender_id' => Auth::id(),
             'content' => trim($this->newMessageContent),
-            'type' => 'text', // Aseguramos el tipo por defecto
+            'type' => 'text',
             'is_read' => false,
         ]);
 
@@ -57,10 +57,11 @@ class ChatInbox extends Component
 
     public function sendOffer()
     {
-        // Saneamos la validación para evitar petes si el precio del producto es inestable en local
-        $maxPrice = ($this->activeChat && $this->activeChat->product && $this->activeChat->product->price > 0)
-            ? $this->activeChat->product->price * 2
-            : 1000;
+        $basePrice = ($this->activeChat && $this->activeChat->product)
+            ? $this->activeChat->product->price
+            : 0;
+
+        $maxPrice = ($basePrice > 0) ? ($basePrice * 10) : 5000;
 
         $this->validate([
             'offerPrice' => 'required|numeric|min:0.50|max:' . $maxPrice,
@@ -86,7 +87,6 @@ class ChatInbox extends Component
     {
         $message = Message::findOrFail($messageId);
 
-        // 🤝 CASO 1: ACEPTAR LA OFERTA
         if ($action === 'accepted') {
             $message->update(['offer_status' => 'accepted']);
 
@@ -103,12 +103,10 @@ class ChatInbox extends Component
             ]);
         }
 
-        // ❌ CASO 2: RECHAZAR LA OFERTA
         elseif ($action === 'rejected') {
             $message->update(['offer_status' => 'rejected']);
         }
 
-        // 🔄 CASO 3: CONTRAOFERTAR (NEGOCIAR)
         elseif ($action === 'counter' && $counterPrice) {
             $message->update(['offer_status' => 'rejected']);
 
@@ -117,7 +115,7 @@ class ChatInbox extends Component
                 'sender_id' => Auth::id(),
                 'content' => "Te hago una contraoferta por " . number_format($counterPrice, 2) . " €.",
                 'type' => 'offer',
-                'offer_price' => floatval($counterPrice), // Nos aseguramos de castearlo a flotante limpio
+                'offer_price' => floatval($counterPrice),
                 'offer_status' => 'pending',
                 'is_read' => false,
             ]);
@@ -129,7 +127,6 @@ class ChatInbox extends Component
     {
         if (Auth::id() !== $this->activeChat->seller_id) return;
 
-        // 1. Marcar como vendido
         $this->activeChat->product->update(['status' => 'sold']);
 
 
@@ -155,22 +152,18 @@ class ChatInbox extends Component
     {
         $authId = Auth::id();
 
-        // 1. Obtener chats (tu código actual está bien)
         $chats = Chat::with(['product', 'buyer', 'seller', 'lastMessage'])
             // ... (resto de tu consulta)
             ->get();
 
-        // 2. Obtener los mensajes del chat seleccionado
         $messages = [];
         $activeChat = null;
 
         if ($this->activeChat) {
             $activeChat = $this->activeChat;
-            // Aquí usamos los mensajes que ya carga activeChat o los recargamos
             $messages = $activeChat->messages()->orderBy('created_at', 'asc')->get();
         }
 
-        // AQUÍ ESTABA EL ERROR: faltaba incluir 'messages' en el array
         return view('livewire.chat-inbox', [
             'chats' => $chats,
             'activeChat' => $activeChat,

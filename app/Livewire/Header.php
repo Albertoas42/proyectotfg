@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On; // 🚨 IMPORTANTE: Necesitamos este atributo en Livewire v3
+use Livewire\Attributes\On;
 
 class Header extends Component
 {
@@ -15,8 +15,6 @@ class Header extends Component
     #[On('update-notification-count')]
     public function refreshHeader()
     {
-        // Al dejar este método vacío pero con el atributo #[On],
-        // obligamos a Livewire a volver a ejecutar el render() limpiando el contador.
     }
 
     public function selectTab($tabName)

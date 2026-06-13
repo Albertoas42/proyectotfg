@@ -20,13 +20,11 @@ class DatabaseSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Roles y Permisos
         $manageProducts = Permission::create(['name' => 'moderar productos']);
         $adminRole = Role::create(['name' => 'admin']);
         $userRole = Role::create(['name' => 'user']);
         $adminRole->givePermissionTo($manageProducts);
 
-        // 2. Categorías
         $categories = [
             ['category_name' => 'Libros', 'description' => 'Libros y apuntes.'],
             ['category_name' => 'Material', 'description' => 'Calculadoras, material de dibujo.'],
@@ -34,7 +32,6 @@ class DatabaseSeeder extends Seeder
         ];
         foreach ($categories as $cat) { Category::create($cat); }
 
-        // 3. Usuarios Base
         $adminUser = User::create(['first_name' => 'Profe', 'last_name' => 'Admin', 'email' => 'admin@instituto.com', 'password' => Hash::make('admin123')]);
         $adminUser->assignRole($adminRole);
         Profile::factory()->create(['user_id' => $adminUser->user_id, 'course' => 'Profesor']);
@@ -43,19 +40,17 @@ class DatabaseSeeder extends Seeder
         $albertoUser->assignRole($userRole);
         Profile::factory()->create(['user_id' => $albertoUser->user_id, 'course' => '2º DAW']);
 
-        // 4. Usuarios Falsos
         $fakeUsers = User::factory(5)->create()->each(fn($u) => $u->assignRole($userRole) && Profile::factory()->create(['user_id' => $u->user_id]));
         $allUsers = User::whereHas('roles', fn($q) => $q->where('name', 'user'))->get();
 
-        // 5. Arrays de datos reales para productos
-        // 5. Arrays de datos reales para productos (añadimos la ruta de la imagen)
+
         $datosProductos = [
             [
                 'title' => 'Calculadora Casio FX-991SP',
                 'price' => 15,
                 'cat' => 2,
                 'desc' => 'Muy bien cuidada, pilas recién cambiadas.',
-                'img' => 'products/casio.jpg' // Asegúrate de que existe este archivo
+                'img' => 'products/casio.jpg'
             ],
             [
                 'title' => 'Libro Historia 2º Bach',
@@ -89,7 +84,6 @@ class DatabaseSeeder extends Seeder
 
         $locations = ['Patio Central', 'Biblioteca', 'Cantina', 'Entrada Principal'];
 
-        // 6. Crear Productos
         foreach ($datosProductos as $p) {
             Product::create([
                 'title' => $p['title'],
@@ -106,7 +100,6 @@ class DatabaseSeeder extends Seeder
 
         $locations = ['Patio Central', 'Biblioteca', 'Cantina', 'Entrada Principal'];
 
-        // 6. Crear Productos con datos reales
         foreach ($datosProductos as $p) {
             Product::create([
                 'title' => $p['title'],
@@ -120,7 +113,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 7. Chat de prueba específico
         $prod = Product::first();
         $chat = Chat::create([
             'product_id' => $prod->product_id,

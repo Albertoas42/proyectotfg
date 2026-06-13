@@ -31,10 +31,13 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-4 md:p-6 rounded-2xl border border-gray-200 shadow-xs">
 
-        <div class="bg-gray-100 aspect-square rounded-xl flex items-center justify-center text-gray-300 relative overflow-hidden">
-            <img src="{{ $product->image_url ? asset($product->image_url) : 'https://placehold.co/600x600?text=Sin+Foto' }}"
-                 alt="{{ $product->title }}"
-                 class="w-full h-full object-cover {{ $product->status == 'sold' ? 'grayscale opacity-60' : '' }}">
+        <div class="relative w-full overflow-hidden bg-gray-100 rounded-2xl flex items-center justify-center">
+            <div class="w-full pt-[100%] relative">
+                <img src="{{ $product->image_url ? asset($product->image_url) : 'https://placehold.co/600x600?text=Sin+Foto' }}"
+                     alt="{{ $product->title }}"
+                     class="absolute inset-0 w-full h-full object-cover {{ $product->status == 'sold' ? 'grayscale opacity-60' : '' }}">
+            </div>
+
             <span class="absolute bottom-4 left-4 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-xs z-20">
                 {{ $product->category->category_name }}
             </span>
@@ -118,24 +121,16 @@
                         @else
                             <button wire:click="startChat" class="w-full py-3 bg-[#13c1ac] hover:bg-[#0fa895] text-white text-sm font-bold rounded-xl cursor-pointer border-none">💬 Chatear / Reservar</button>
                         @endif
+
+                        <div class="mt-4 text-center">
+                            <button wire:click="$dispatch('open-report-modal', { productId: {{ $product->product_id }} })"
+                                    class="text-[10px] font-bold text-gray-400 hover:text-red-500 transition">
+                                🚩 Reportar este anuncio
+                            </button>
+                        </div>
                     @endif
                 </div>
             @endif
-        </div>
-    </div>
-
-    <div x-data="{ showModal: false }"
-         @open-delete-modal.window="showModal = true"
-         x-show="showModal"
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-         x-cloak>
-        <div @click.away="showModal = false" class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-            <h3 class="text-lg font-black text-gray-800 mb-2">¿Eliminar anuncio?</h3>
-            <p class="text-sm text-gray-500 mb-6">Esta acción es irreversible. ¿Seguro que quieres borrar este producto?</p>
-            <div class="flex gap-3">
-                <button @click="showModal = false" class="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">No, cancelar</button>
-                <button wire:click="deleteProduct" class="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition">Sí, borrar</button>
-            </div>
         </div>
     </div>
 </main>

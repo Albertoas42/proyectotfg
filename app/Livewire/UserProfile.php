@@ -6,7 +6,7 @@ use App\Mail\CodigoVerificacionMail;
 use App\Models\Product;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use Livewire\WithFileUploads; // 🚨 Requerido para la imagen de perfil
+use Livewire\WithFileUploads;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,23 +17,19 @@ class UserProfile extends Component
 
     public User $user;
 
-    // Estados de la interfaz
     public $isEditing = false;
     public $isVerifying = false;
 
-    // Campos del formulario
     public $first_name;
     public $last_name;
     public $course;
     public $bio;
-    public $newAvatar; // Almacena temporalmente el archivo subido
+    public $newAvatar;
 
-    // Campos de verificación
     public $verificationCode;
     public $generatedCode;
     public $verificationError;
 
-    // Listado de cursos para el desplegable del centro escolar
     public $availableCourses = [
         '1º SMR (Sistemas Microinformáticos y Redes)',
         '2º SMR (Sistemas Microinformáticos y Redes)',
@@ -53,7 +49,6 @@ class UserProfile extends Component
     {
         $this->user = $user;
 
-        // Inicializamos los campos del formulario con los valores del usuario y su perfil
         $this->first_name = $user->first_name;
         $this->last_name = $user->last_name;
         $this->bio = $user->profile?->bio ?? '';
@@ -79,24 +74,20 @@ class UserProfile extends Component
             'newAvatar' => 'nullable|image|max:1024', // Máximo 1MB
         ]);
 
-        // 1. Actualizamos datos básicos de la tabla users
         $this->user->update([
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
         ]);
 
-        // 2. Procesamos el avatar si se ha subido uno nuevo
         $avatarPath = $this->user->profile?->avatar_path;
         if ($this->newAvatar) {
-            // Eliminamos el antiguo si existe
             if ($avatarPath && Storage::disk('public')->exists($avatarPath)) {
                 Storage::disk('public')->delete($avatarPath);
             }
-            // Guardamos el nuevo en /storage/app/public/avatars
             $avatarPath = $this->newAvatar->store('avatars', 'public');
         }
 
-        // 3. Guardamos o actualizamos los datos en la tabla profiles relacional
+
         $this->user->profile()->updateOrCreate(
             ['user_id' => $this->user->user_id],
             [
@@ -111,9 +102,7 @@ class UserProfile extends Component
         session()->flash('message', '¡Perfil actualizado correctamente!');
     }
 
-    /**
-     * 📧 SIMULACIÓN DE VERIFICACIÓN DE CORREO INSTITUCIONAL
-     */
+
     public function sendVerificationEmail()
     {
         if (Auth::id() !== $this->user->user_id) abort(403);
@@ -139,20 +128,17 @@ class UserProfile extends Component
         // Comprobamos el código
         if ($this->verificationCode && (int)$this->verificationCode === $savedCode) {
 
-            // 1. Actualizamos el estado verificado en la base de datos
+
             $this->user->profile()->updateOrCreate(
                 ['user_id' => $this->user->user_id],
                 ['is_verified' => true]
             );
 
-            // 🚨 LA CLAVE: Recargamos el modelo del usuario y sus relaciones en memoria
-            // para que la vista renderice el check de verificación al milisegundo.
             $this->user->refresh();
 
-            // 2. Limpiamos variables de estado y sesión
             session()->forget('email_verification_code');
             $this->isVerifying = false;
-            $this->verificationCode = ''; // Limpiamos el input de la pantalla
+            $this->verificationCode = '';
             $this->verificationError = null;
 
             session()->flash('message', '🎉 ¡Enhorabuena! Tu cuenta ha sido verificada con tu correo institucional.');
@@ -162,17 +148,13 @@ class UserProfile extends Component
     }
     public function changeProductStatus($productId, $newStatus)
     {
-        // Buscamos el producto del catálogo
         $product = \App\Models\Product::where('product_id', $productId)
-            ->where('user_id', Auth::id()) // 🔒 Seguridad: Solo el dueño puede cambiarlo
+            ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        // Actualizamos el estado
         $product->update([
             'status' => $newStatus
         ]);
-
-        // Opcional: Si pasa a vendido, podrías lanzar una notificación al comprador en el futuro
 
         session()->flash('message', "El producto ha sido marcado como " . ($newStatus == 'reserved' ? 'Reservado' : 'Vendido') . ".");
     }
@@ -182,7 +164,6 @@ class UserProfile extends Component
         $averageRating = $this->user->reviewsReceived()->avg('rating') ?? 0;
         $totalReviews = $this->user->reviewsReceived()->count();
 
-        // Consulta optimizada para la vista
         $products = $this->user->products()
             ->where('status', 'available')
             ->latest()

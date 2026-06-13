@@ -12,7 +12,7 @@ class CodigoVerificacionMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $codigo; // Propiedad pública para que esté accesible en la plantilla
+    public $codigo;
 
     public function __construct($codigo)
     {
@@ -29,7 +29,7 @@ class CodigoVerificacionMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.verification', // La vista blade del correo
+            view: 'emails.verification',
         );
     }
 }
