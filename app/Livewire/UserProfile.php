@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Mail\CodigoVerificacionMail;
+use App\Models\Product;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithFileUploads; // 🚨 Requerido para la imagen de perfil
@@ -57,6 +58,7 @@ class UserProfile extends Component
         $this->last_name = $user->last_name;
         $this->bio = $user->profile?->bio ?? '';
         $this->course = $user->profile?->course ?? '';
+
     }
 
     public function toggleEdit()
@@ -177,11 +179,20 @@ class UserProfile extends Component
 
     public function render()
     {
-        // Cálculos de valoraciones (Ajusta según tu base de datos)
         $averageRating = $this->user->reviewsReceived()->avg('rating') ?? 0;
         $totalReviews = $this->user->reviewsReceived()->count();
-        $products = $this->user->products()->where('status', 'available')->get();
 
-        return view('livewire.user-profile', compact('averageRating', 'totalReviews', 'products'));
+        // Consulta optimizada para la vista
+        $products = $this->user->products()
+            ->where('status', 'available')
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('livewire.user-profile', [
+            'averageRating' => $averageRating,
+            'totalReviews' => $totalReviews,
+            'products' => $products
+        ]);
     }
 }

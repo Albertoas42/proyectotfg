@@ -154,7 +154,7 @@
 
         <div class="lg:col-span-2 space-y-4">
             <h2 class="text-lg font-black text-gray-800 tracking-tight flex items-center gap-2">
-                📦 Productos en venta <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full">{{ count($products) }}</span>
+                📦 Productos en venta <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full">{{ $products->count() }}</span>
             </h2>
 
             @if($products->isEmpty())
@@ -184,6 +184,14 @@
                         </div>
                     @endforeach
                 </div>
+
+                @if($products->count() >= 3)
+                    <div class="text-center mt-2">
+                        <a href="{{ route('user.products', $user->user_id) }}" class="text-xs font-bold text-[#13c1ac] hover:text-[#0fa895] transition">
+                            Ver todos los productos →
+                        </a>
+                    </div>
+                @endif
             @endif
         </div>
 

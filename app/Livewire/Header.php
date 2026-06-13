@@ -11,9 +11,7 @@ class Header extends Component
 {
     public $currentTab;
 
-    // 🎧 ESCUCHA EL EVENTO EN TIEMPO REAL
-    // Al usar #[On(...)], en cuanto el chat lanza el dispatch, Livewire ejecuta
-    // esta función automáticamente y refresca el componente entero al instante.
+
     #[On('update-notification-count')]
     public function refreshHeader()
     {
